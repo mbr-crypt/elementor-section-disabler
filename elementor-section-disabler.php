@@ -3,9 +3,9 @@
  * Plugin Name: INTERCAT – Elementor Section Disabler
  * Description: Adds a "Hide on live site" switch to containers, sections, columns and widgets in Elementor under the "Advanced" tab. The element stays visible in the editor but is hidden with display:none on the live frontend.
  * Version:     1.0.0
- * Author:      INTERCAT
- * Author URI:  https://intercat.it
- * Text Domain: intercat
+ * Author:      MBR-CRYPT from INTERCAT.it
+ * Author URI:  https://github.com/mbr-crypt/elementor-section-disabler
+ * Text Domain: github
  */
  
 if ( ! defined( 'ABSPATH' ) ) {

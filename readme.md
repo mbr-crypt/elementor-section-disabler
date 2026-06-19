@@ -18,7 +18,7 @@ Handy for staging content, seasonal blocks, work-in-progress sections, or tempor
 
 ## Requirements
 
-- WordPress 5.0+ (tested on 6.x)
+- WordPress 5.0+ (tested on 7.x)
 - Elementor (free) — Flexbox Containers supported
 - PHP 7.4 or newer
 
@@ -94,10 +94,10 @@ The editor highlight is added through Elementor's `prefix_class`, so it also sho
 
 ## License
 
-Recommended: **GNU GPL v2 or later** — the standard for WordPress/Elementor plugins, since they are derivative works of GPL-licensed code. Add a matching `LICENSE` file to the repository.
+**GNU FPL v3** - Take a look at the `LICENSE` file
 
 ---
 
 ## Author
 
-**INTERCAT** — [intercat.it](https://intercat.it)
+**MBR-CRYPT from INTERCAT** — [intercat.it](https://intercat.it)
