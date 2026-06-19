@@ -94,7 +94,7 @@ The editor highlight is added through Elementor's `prefix_class`, so it also sho
 
 ## License
 
-**GNU FPL v3** - Take a look at the `LICENSE` file
+**GNU GPL v3** - Take a look at the `LICENSE` file
 
 ---
 
