@@ -1,6 +1,6 @@
 # Elementor Section Disabler
 
-A lightweight WordPress plugin that adds a **Hide on live site** toggle to Elementor elements. Disabled elements stay fully visible and editable inside the Elementor editor, but are removed from the live frontend with `display:none`.
+A lightweight WordPress plugin that adds a **Hide on live site** toggle to Elementor elements. Disabled elements stay fully visible and editable inside the Elementor editor, but are **not rendered at all** on the live frontend, so they are missing from the HTML source as well.
 
 Handy for staging content, seasonal blocks, work-in-progress sections, or temporarily pulling something offline without deleting it.
 
@@ -10,8 +10,8 @@ Handy for staging content, seasonal blocks, work-in-progress sections, or tempor
 
 - Adds a **Disable Section** control under the **Advanced** tab.
 - Works on Containers, Sections, Columns and Widgets.
-- Element stays visible in the editor, marked with a dashed outline and a label.
-- Hidden on the real frontend via a CSS class (no inline-style conflicts).
+- Element stays visible in the editor, faded to grey with diagonal stripes, a dashed outline and a label.
+- Not rendered on the real frontend (Elementor's `should_render` filter), so crawlers and AI agents never see the content. A CSS class with `display:none` remains as a fallback.
 - No settings page, no database bloat, no frontend JavaScript, no dependencies beyond Elementor.
 
 ---
@@ -48,7 +48,7 @@ Handy for staging content, seasonal blocks, work-in-progress sections, or tempor
 3. Open the **Advanced** tab → **Disable Section**.
 4. Switch **Hide on live site** to **Yes**.
 
-In the editor the element stays visible with a red dashed outline and a *"Hidden on live site"* label. On the published page it is gone. Set the toggle back to **No** to bring it back.
+In the editor the element stays visible, faded to grey and covered with diagonal stripes, with a *"Hidden on live site"* label. On the published page it is gone, including from the page source. Set the toggle back to **No** to bring it back.
 
 > The **Preview** (eye icon) reflects the live state, so disabled elements appear hidden there too — that's expected.
 
@@ -56,9 +56,11 @@ In the editor the element stays visible with a red dashed outline and a *"Hidden
 
 ## How it works
 
-On render the plugin checks Elementor's edit mode. Inside the editor nothing is hidden, so the element stays fully editable. Only on the real frontend the wrapper receives an `esd-hidden` class, and a tiny inline stylesheet applies `display:none !important`.
+On render the plugin checks Elementor's edit mode. Inside the editor nothing is hidden, so the element stays fully editable. On the real frontend the plugin hooks into `elementor/frontend/{widget|section|column|container}/should_render` and returns `false` for flagged elements, so Elementor skips them completely and no markup is output.
 
-The editor highlight is added through Elementor's `prefix_class`, so it also shows for elements that are re-rendered live via JavaScript while editing.
+As a safety net, flagged elements that are rendered anyway receive an `esd-hidden` class, and a tiny inline stylesheet applies `display:none !important`.
+
+The editor look is added through Elementor's `prefix_class`, so it also shows for elements that are re-rendered live via JavaScript while editing. The grey fade is a `backdrop-filter` on an overlay, so Elementor's own editing handles keep their colours; browsers without `backdrop-filter` fall back to grayscale + opacity.
 
 ---
 
@@ -77,13 +79,19 @@ The editor highlight is added through Elementor's `prefix_class`, so it also sho
 
 ## Notes & caveats
 
-- **`display:none` is visual only.** The element is still present in the page's HTML source and the DOM — it just isn't rendered. Don't use this to hide sensitive content; anyone viewing the page source or DevTools can still read it.
-- **SEO / accessibility:** hidden elements are skipped by browsers, screen readers, and generally ignored by search engines. Don't hide content you still want indexed.
+- **Not in the page source anymore.** Since 1.1.0 flagged elements are not part of the rendered HTML, so they are not visible in the page source, the DOM, or to crawlers and AI agents reading the page.
+- **Not a security feature.** The content is still stored in the page's Elementor data in the database and stays readable for everyone with edit access. Don't rely on this for confidential content.
+- **SEO / accessibility:** hidden elements are skipped by browsers, screen readers, and search engines alike. Don't hide content you still want indexed.
+- **Caches:** if you use a page cache or CDN, purge it after toggling an element so the old HTML disappears.
 - **Control ID:** the toggle is stored under the `esd_disable` key. Changing that key in a future version would reset existing toggles, so keep it stable across updates.
 
 ---
 
 ## Changelog
+
+### 1.1.0
+- Flagged elements are no longer rendered on the frontend (via `should_render`) instead of only being hidden with `display:none`; the CSS class stays as a fallback.
+- New editor look: disabled elements are faded to grey and covered with diagonal stripes.
 
 ### 1.0.0
 - Initial release.
